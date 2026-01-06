@@ -58,7 +58,7 @@ dbt docs serve --port 8081 (ou 8080, usei a 8081 pois era a que estava disponív
 
 ## Variáveis de ambiente (.env)
 
-Para gerar sua api key: **https://openweathermap.org/**
+Para gerar sua api key: **https://home.openweathermap.org/api_keys**
 
 Crie/edite `weather/scripts/.env`:
 
