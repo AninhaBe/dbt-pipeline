@@ -69,11 +69,9 @@ POSTGRES_PORT=5432 (geralmente)
 POSTGRES_DB=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
-```
-
 # opcional (pode ser passado tanto como uma variável de ambiente ou como parâmetro da função principal)
 CITY=São Paulo
-
+```
 ---
 
 
