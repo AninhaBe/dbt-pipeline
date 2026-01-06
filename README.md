@@ -1,29 +1,96 @@
-# Projeto DBT Weather API
+# dbt-weather (OpenWeather → Postgres → dbt)
 
-Este é um projeto de pipeline de dados ponta a ponta que extrai informações meteorológicas da **OpenWeather API** e as transforma utilizando o **dbt (data build tool)**, tendo o **PostgreSQL** como nosso Data Warehouse local.
+Projeto didático de uma **pipeline de dados** que:
+1. **Extrair** dados de clima da API **OpenWeather** (Python)
+2. **Carregar** no **PostgreSQL** (tabela “bruta”)
+3. **Transformar/modelar** com **dbt** em camadas (staging → marts)
+4. **Documentar** o projeto com `dbt docs`
 
-## Estrutura do Projeto
-
-O ecossistema está dividido em dois componentes principais:
-- **Data Pipeline**: Scripts Python responsáveis pela extração (E) e carga (L) dos dados crus.
-- **dbt Transformations**: Modelagem e transformação dos dados (T) seguindo as melhores práticas de engenharia de software aplicada a dados.
+![Print](architecture.png)
 
 ---
 
-## 🛠️ Pré-requisitos
+A intenção com o projeto é intensificar e solidificar o conhecimento em relação a ferramenta dbt, praticando:
+- **Sources**: declarar a tabela de entrada como fonte confiável
+- **Models**: criar models em camadas (staging e marts)
+- **Materializações**: views em staging e modelo final (ex.: incremental)
+- **Macros**: reutilizar lógica (ex.: schema por camada, conversão de horário)
+- **dbt docs**: gerar e navegar na documentação do projeto
 
-* **Python 3.12+**
-* **Banco de Dados PostgreSQL**
-* **Chave de API do OpenWeather** (gratuita)
+## Como o projeto funciona (visão rápida)
 
-## 🚀 Configuração Inicial
+### 1. Ingestão (Python → Postgres)
+Os scripts em `scripts/`:
+- Buscam clima de uma cidade (OpenWeather)
+- Conectam no Postgres
+- Criam schema/tabela se não existir
+- Inserem um registro com os dados retornados pela API
 
-### 1. Ambiente Virtual e Dependências
-Recomenda-se o uso do `uv` pela velocidade, mas você também pode usar o `pip`:
+Isso vira a “camada bruta” que o dbt vai consumir.
+
+### 2. Transformação (dbt)
+No dbt:
+- `models/sources/` define a tabela bruta como `source`
+- `models/staging/` padroniza e organiza os campos (staging)
+- `models/marts/` cria a tabela final pronta para consumo (marts)
+
+---
+
+## Comandos úteis (dbt)
+
+Dentro da pasta do projeto dbt (`weather/`):
 
 ```bash
-# Usando uv (recomendado)
-uv sync
+dbt debug
+dbt run
+dbt test
+dbt docs generate
+dbt docs serve --port 8081 (ou 8080, usei a 8081 pois era a que estava disponível para uso)
+```
+----
 
-# Ou usando pip tradicional
-pip install -r requirements.txt
+## Pré-requisitos
+
+- Python (rodando via `uv`)
+- PostgreSQL rodando local (host/porta configurados)
+- Chave da OpenWeather API
+- dbt instalado no ambiente
+
+## Variáveis de ambiente (.env)
+
+Para gerar sua api key: **https://openweathermap.org/**
+
+Crie/edite `weather/scripts/.env`:
+
+```env
+OPENWEATHER_API_KEY=sua_api_key
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432 (geralmente)
+POSTGRES_DB=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+```
+
+# opcional (pode ser passado tanto como uma variável de ambiente ou como parâmetro da função principal)
+CITY=São Paulo
+
+---
+
+
+## Ordem de execução
+1. Rodar ingestão (Python → Postgres):
+```bash
+uv run python scripts/main.py
+```
+
+2. Rodar transformações (dbt):
+```bash
+dbt run
+dbt test
+```
+
+3. Gerar docs:
+```bash
+dbt docs generate
+dbt docs serve --port 8081
+```
