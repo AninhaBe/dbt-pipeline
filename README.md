@@ -1,10 +1,10 @@
 # dbt-weather (OpenWeather → Postgres → dbt)
 
 Projeto didático de uma **pipeline de dados** que:
-1. **Extrair** dados de clima da API **OpenWeather** (Python)
-2. **Carregar** no **PostgreSQL** (tabela “bruta”)
-3. **Transformar/modelar** com **dbt** em camadas (staging → marts)
-4. **Documentar** o projeto com `dbt docs`
+1. **Extrai** dados de clima da API **OpenWeather** (Python)
+2. **Carrega** no **PostgreSQL** (tabela “bruta”)
+3. **Transforma/modela** com **dbt** em camadas (staging → marts)
+4. **Documenta** o projeto com `dbt docs`
 
 ![Print](architecture.png)
 
