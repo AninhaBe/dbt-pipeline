@@ -1,13 +1,9 @@
 import logging
-import os
-from dotenv import load_dotenv
-
 from connect_db import connect_to_database
 from create_schema import create_schema_and_table
 from extract_api import get_weather_data
 from insert_data import insert_weather_data
 
-load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
